@@ -9,10 +9,12 @@ import (
 	"time"
 )
 
+const MINING_DIFFICULTY = 3
+
 type Block struct {
+	timestamp    int64
 	nonce        int
 	previousHash [32]byte
-	timestamp    int64
 	transactions []*Transaction
 }
 
@@ -51,7 +53,6 @@ func (b *Block) MarshalJSON() ([]byte, error) {
 // 32 as mentioned in std lib
 func (b *Block) Hash() [32]byte {
 	m, _ := json.Marshal(b)
-	fmt.Println(string(m))
 	return sha256.Sum256([]byte(m))
 }
 
@@ -87,9 +88,38 @@ func (bc *Blockchain) Print() {
 	println()
 }
 
-func (bc *Blockchain)  AddTransaction(sender, recipient string, value float32) {
+func (bc *Blockchain) AddTransaction(sender, recipient string, value float32) {
 	t := NewTransaction(sender, recipient, value)
 	bc.transactionPool = append(bc.transactionPool, t)
+}
+
+func (bc *Blockchain) CopyTransactionPool() []*Transaction {
+	transactions := make([]*Transaction, 0)
+	for _, t := range bc.transactionPool {
+		transactions = append(transactions, NewTransaction(t.senderBlockchainAddress, t.recipientBlockchainAddress, t.value))
+	}
+	return transactions
+}
+
+func (bc *Blockchain) ValidProof(nonce int, previousHash [32]byte, transactions []*Transaction, difficulty int) bool {
+	zeros := strings.Repeat("0", difficulty)
+	guessBlock := Block{0, nonce, previousHash, transactions}
+
+	guessHashStr := fmt.Sprintf("%x", guessBlock.Hash())
+	// fmt.Println(guessHashStr)
+	return guessHashStr[:difficulty] == zeros
+}
+
+func (bc *Blockchain) ProofOfWork() int {
+	trasactions := bc.CopyTransactionPool()
+	previousHash := bc.LastBlock().Hash()
+
+	nonce := 0
+
+	for !bc.ValidProof(nonce, previousHash, trasactions, MINING_DIFFICULTY) {
+		nonce += 1
+	}
+	return nonce
 }
 
 type Transaction struct {
@@ -129,23 +159,22 @@ func init() {
 
 func main() {
 
-	blochain := NewBlockchain()
+	blockchain := NewBlockchain()
 	// blochain.Print()
 
-	blochain.AddTransaction("A", "B", 1.0)
+	blockchain.AddTransaction("A", "B", 1.0)
 
-	previousHash := blochain.LastBlock().Hash()
-	blochain.CreateBlock(5, previousHash)
-	blochain.Print()
+	previousHash := blockchain.LastBlock().Hash()
+	nonce := blockchain.ProofOfWork()
+	blockchain.CreateBlock(nonce, previousHash)
+	blockchain.Print()
 
-	blochain.AddTransaction("C", "D", 2.0)
-	previousHash = blochain.LastBlock().Hash()
-	blochain.CreateBlock(2, previousHash)
-	blochain.Print()
+	blockchain.AddTransaction("C", "D", 2.0)
+	blockchain.AddTransaction("X", "Y", 4.0)
 
-	blochain.AddTransaction("X", "Y", 4.0)
-	previousHash = blochain.LastBlock().Hash()
-	blochain.CreateBlock(22, previousHash)
-	blochain.Print()
+	previousHash = blockchain.LastBlock().Hash()
+	nonce = blockchain.ProofOfWork()
+	blockchain.CreateBlock(nonce, previousHash)
+	blockchain.Print()
 
 }
