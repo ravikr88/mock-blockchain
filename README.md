@@ -30,7 +30,11 @@ go run main.go wallet_server.go
 ### access the wallet UI at http://0.0.0.0:8080/
 <img width="574" alt="Screenshot 2024-08-05 at 7 21 08 PM" src="https://github.com/user-attachments/assets/3242578d-35ec-4c0b-9408-2cf2649578a9">
 
+### run other wallets by chainging the port
 
+```bash
+go run main.go wallet_server.go -port 8081
+```
 
 
 
