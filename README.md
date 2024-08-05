@@ -1,4 +1,6 @@
-# About ( detailed Readme comming soon !!! please wait )
+# detailed Readme comming soon !!! please wait )
+# Some bug fixing is being done !!! 
+## syncing of txns among nodes ... ToDo !!
 - Built a local blockchain network in Golang with features including Proof of Work, digital signatures, public and private keys, mining, wallet generation, and transaction verification, transferring cryptocurrency, synchronizing transactions, and maintaining a distributed ledger. Incorporated features such as block creation, chain validation, consensus mechanisms, and transaction broadcasting and an UI for handy use.
 
 
