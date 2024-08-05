@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -44,15 +45,22 @@ func FindNeighbors(myHost string, myPort uint16, startIp uint8, endIp uint8, sta
 	}
 	return neighbors
 }
-
 func GetHost() string {
 	hostname, err := os.Hostname()
 	if err != nil {
-		return "127.0.0.1"
+		return "Hostname retrieval failed, returning default address 127.0.0.1"
 	}
-	address, err := net.LookupHost(hostname)
-	if err != nil {
-		return "127.0.0.1"
+
+	addresses, err := net.LookupHost(hostname)
+	if err != nil || len(addresses) == 0 {
+		return "Address lookup failed, returning default address 127.0.0.1"
 	}
-	return address[0]
+
+	for _, addr := range addresses {
+		if strings.Contains(addr, ".") { // Check for IPv4 address
+			return fmt.Sprintf("Host: %s, IPv4 Address: %s", hostname, addr)
+		}
+	}
+
+	return fmt.Sprintf("Host: %s, IPv6 Address: %s", hostname, addresses[0]) // Fallback to the first address (likely IPv6)
 }

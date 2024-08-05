@@ -16,7 +16,7 @@ import (
 	"github.com/ravikr88/mock-blockchain/wallet"
 )
 
-const tempDir = "wallet_server/templates"
+const tempDir = "templates"
 
 type WalletServer struct {
 	port    uint16

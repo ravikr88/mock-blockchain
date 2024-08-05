@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/ravikr88/utils"
+	"github.com/ravikr88/mock-blockchain/utils"
 )
 
 func main() {
