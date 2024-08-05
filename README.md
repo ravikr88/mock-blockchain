@@ -1,4 +1,4 @@
-# detailed Readme comming soon !!! please wait )
+# detailed Readme comming soon !!! please wait :)
 # Some bug fixing is being done !!! 
 
 # Todo 
