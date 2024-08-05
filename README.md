@@ -49,7 +49,7 @@ go run main.go wallet_server.go -gateway = "http://127.0.0.1:9000"
 ### run other wallets by chainging the port and connecting to different node runnig on port 9001
 
 ```bash
-go run main.go wallet_server.go -port 8080 -gateway http://127.0.0.1.9001
+go run main.go wallet_server.go -port 8080 -gateway "http://127.0.0.1.9001"
 ```
 
 
